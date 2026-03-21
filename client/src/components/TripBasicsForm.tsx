@@ -51,7 +51,7 @@ export default function TripBasicsForm({ data, onChange, onNext, onBack }: Props
               <input
                 className="ob-form__input"
                 type="text"
-                placeholder="City, country"
+                placeholder="e.g. Italy"
                 value={data.country}
                 onChange={(e) => set("country", e.target.value)}
               />
@@ -61,7 +61,7 @@ export default function TripBasicsForm({ data, onChange, onNext, onBack }: Props
               <input
                 className="ob-form__input"
                 type="text"
-                placeholder="City, country"
+                placeholder="e.g. Rome"
                 value={data.city}
                 onChange={(e) => set("city", e.target.value)}
               />

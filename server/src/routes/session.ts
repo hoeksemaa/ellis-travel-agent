@@ -92,6 +92,10 @@ router.post("/api/session/:code/submit", (req, res) => {
         })
         .catch((err) => {
           console.error(`Failed to generate options for session ${code}:`, err);
+          const current = getSession(code);
+          if (current) {
+            current.error = `Failed to generate options: ${err.message}`;
+          }
         });
     }
 

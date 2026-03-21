@@ -1,7 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { QuizSubmission, Option } from "../types.js";
 
-const anthropic = new Anthropic();
+let anthropic: Anthropic;
+function getClient() {
+  if (!anthropic) anthropic = new Anthropic();
+  return anthropic;
+}
 
 function formatAnswers(submission: QuizSubmission): string {
   return submission.answers
@@ -54,7 +58,7 @@ Return exactly 5 options as a JSON array. Each option should be a real, specific
 
 Return ONLY the JSON array, no other text.`;
 
-  const response = await anthropic.messages.create({
+  const response = await getClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 4096,
     system:
@@ -131,7 +135,7 @@ Generate a fun, detailed recommendation summary for these two travelers. Include
 
 Keep it conversational and enthusiastic but practical.`;
 
-  const response = await anthropic.messages.create({
+  const response = await getClient().messages.create({
     model: "claude-sonnet-4-20250514",
     max_tokens: 4096,
     system:

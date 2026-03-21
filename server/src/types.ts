@@ -61,5 +61,6 @@ export interface Session {
   options?: Option[];
   result?: Option;
   resultSummary?: string;
+  error?: string;
   createdAt: number;
 }

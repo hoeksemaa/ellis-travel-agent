@@ -1,13 +1,14 @@
+import type { ReactNode } from "react";
 import bgLandscape from "./assets/bg-landscape.png";
 import cardTexture from "./assets/card-texture.png";
 import "./LandingPage.css";
 
-interface Props {
-  onNewRoom: () => void;
-  onJoinRoom: () => void;
+interface LandingPageProps {
+  children: ReactNode;
+  sessionCode?: string;
 }
 
-export default function LandingPage({ onNewRoom, onJoinRoom }: Props) {
+export default function LandingPage({ children, sessionCode }: LandingPageProps) {
   return (
     <div className="landing">
       <div className="landing__bg">
@@ -25,24 +26,11 @@ export default function LandingPage({ onNewRoom, onJoinRoom }: Props) {
         <span className="card__dot card__dot--br" />
         <span className="card__border-inset" />
 
-        <div className="card__content">
-          <h1 className="brand">twopeople</h1>
+        {sessionCode && (
+          <span className="card__code-badge">{sessionCode}</span>
+        )}
 
-          <p className="tagline">
-            less arguing. more traveling.
-            <br />
-            we handles the rest.
-          </p>
-
-          <div className="landing__actions">
-            <button className="btn btn--primary" onClick={onNewRoom}>
-              New Room
-            </button>
-            <button className="btn btn--outline" onClick={onJoinRoom}>
-              Join Room
-            </button>
-          </div>
-        </div>
+        {children}
       </div>
     </div>
   );
