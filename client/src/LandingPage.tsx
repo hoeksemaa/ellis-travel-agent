@@ -3,12 +3,11 @@ import bgLandscape from "./assets/bg-landscape.png";
 import cardTexture from "./assets/card-texture.png";
 import "./LandingPage.css";
 
-interface LandingPageProps {
-  children: ReactNode;
-  sessionCode?: string;
+interface Props {
+  onStart: () => void;
 }
 
-export default function LandingPage({ children, sessionCode }: LandingPageProps) {
+export default function LandingPage({ onStart }: Props) {
   return (
     <div className="landing">
       <div className="landing__bg">
@@ -30,7 +29,18 @@ export default function LandingPage({ children, sessionCode }: LandingPageProps)
           <span className="card__code-badge">{sessionCode}</span>
         )}
 
-        {children}
+          <p className="tagline">
+            less arguing. more traveling.
+            <br />
+            we handles the rest.
+          </p>
+
+          <div className="landing__actions">
+            <button className="btn btn--primary" onClick={onStart}>
+              Start planning
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

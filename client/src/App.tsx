@@ -3,6 +3,7 @@ import LandingPage from "./LandingPage";
 import WelcomeScreen from "./screens/WelcomeScreen";
 import CreateRoom from "./components/CreateRoom";
 import JoinRoom from "./components/JoinRoom";
+import UsernameScreen from "./components/UsernameScreen";
 import OnboardingLayout from "./components/OnboardingLayout";
 import SectionIntro from "./components/SectionIntro";
 import TripBasicsForm from "./components/TripBasicsForm";
@@ -14,7 +15,18 @@ import VotingScreen from "./screens/VotingScreen";
 import ResultScreen from "./screens/ResultScreen";
 import { api } from "./api";
 
-/* ── Types exported for child components ──────── */
+export type Step =
+  | "landing"
+  | "username"
+  | "create-room"
+  | "join-room"
+  | "trip-basics-intro"
+  | "trip-basics-form"
+  | "persona-intro"
+  | "persona-question"
+  | "activities-intro"
+  | "travel-interests"
+  | "vibe-prefs";
 
 export interface TripBasics {
   country: string;
@@ -31,60 +43,22 @@ export interface Preferences {
   noiseLevel: number;
 }
 
-export type NavSection = "trip-basics" | "persona" | "preferences";
-
-/* ── Steps ────────────────────────────────────── */
-
-type Step =
-  | "welcome"
-  | "create-or-join"
-  | "create-room"
-  | "join-room"
-  | "trip-basics-intro"
-  | "trip-basics"
-  | "persona-intro"
-  | "persona"
-  | "prefs-intro"
-  | "travel-interests"
-  | "vibe-preferences"
-  | "generating"
-  | "voting"
-  | "result";
-
-/* ── Which nav section each step belongs to ───── */
-
-function navSectionFor(step: Step): NavSection {
-  switch (step) {
-    case "trip-basics-intro":
-    case "trip-basics":
-      return "trip-basics";
-    case "persona-intro":
-    case "persona":
-      return "persona";
-    case "prefs-intro":
-    case "travel-interests":
-    case "vibe-preferences":
-      return "preferences";
-    default:
-      return "trip-basics";
-  }
+export interface FlowData {
+  path: "new" | "join" | null;
+  username: string;
+  roomCode: string;
+  tripBasics: TripBasics;
+  persona: { planningStyle: string };
+  preferences: Preferences;
 }
 
-/* ── App ──────────────────────────────────────── */
-
-export default function App() {
-  const [step, setStep] = useState<Step>("welcome");
-  const [username, setUsername] = useState("");
-  const [sessionCode, setSessionCode] = useState("");
-
-  const [tripBasics, setTripBasics] = useState<TripBasics>({
-    country: "",
-    city: "",
-    travelDates: "",
-    relationship: "",
-  });
-  const [personaAnswer, setPersonaAnswer] = useState("");
-  const [preferences, setPreferences] = useState<Preferences>({
+const defaultFlow: FlowData = {
+  path: null,
+  username: "",
+  roomCode: "",
+  tripBasics: { country: "", city: "", travelDates: "", relationship: "" },
+  persona: { planningStyle: "" },
+  preferences: {
     interests: [],
     environment: 50,
     crowdComfort: 50,
@@ -126,19 +100,24 @@ export default function App() {
     setStep("prefs-intro");
   }
 
-  async function handlePrefsComplete() {
-    // Submit preferences quiz (interests + vibes) to server
-    await api.submitQuiz(sessionCode, username, {
-      quizId: "preferences",
-      answers: [
-        { questionId: "interests", selected: preferences.interests },
-        { questionId: "environment", selected: String(preferences.environment) },
-        { questionId: "crowdComfort", selected: String(preferences.crowdComfort) },
-        { questionId: "energyLevel", selected: String(preferences.energyLevel) },
-        { questionId: "noiseLevel", selected: String(preferences.noiseLevel) },
-      ],
-    });
-    setStep("generating");
+  if (step === "landing") {
+    return <LandingPage onStart={() => setStep("username")} />;
+  }
+
+  if (step === "username") {
+    return (
+      <UsernameScreen
+        onNewRoom={(username) => {
+          update({ username });
+          setStep("create-room");
+        }}
+        onJoinRoom={(username) => {
+          update({ username });
+          setStep("join-room");
+        }}
+        onBack={() => setStep("landing")}
+      />
+    );
   }
 
   const handleGeneratingDone = useCallback(() => {
@@ -261,12 +240,12 @@ export default function App() {
           </div>
         </LandingPage>
       )}
-
-      {step === "create-room" && (
-        <CreateRoom
-          code={sessionCode}
-          onNext={() => setStep("trip-basics-intro")}
-          onBack={() => setStep("create-or-join")}
+      {step === "persona-intro" && (
+        <SectionIntro
+          part="Part 2"
+          title="Now let's get to know your travel styles."
+          subtitle="Excited — this is exactly what travel should feel like"
+          onNext={() => setStep("persona-question")}
         />
       )}
 
@@ -276,17 +255,13 @@ export default function App() {
           onBack={() => setStep("create-or-join")}
         />
       )}
-
-      {step === "generating" && (
-        <LandingPage sessionCode={sessionCode}>
-          <WaitingScreen
-            code={sessionCode}
-            targetStatus="voting"
-            message="Finding your perfect destinations"
-            subMessage="Our travel agent is searching..."
-            onReady={handleGeneratingDone}
-          />
-        </LandingPage>
+      {step === "activities-intro" && (
+        <SectionIntro
+          part="Part 3"
+          title="And what would you like to do on this trip?"
+          subtitle="Excited — this is exactly what travel should feel like"
+          onNext={() => setStep("travel-interests")}
+        />
       )}
 
       {step === "voting" && (

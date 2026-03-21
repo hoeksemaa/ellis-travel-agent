@@ -37,7 +37,7 @@ const SLIDERS: SliderConfig[] = [
     label: "Energy level",
     min: "Chill",
     mid: "Neutral",
-    max: "Outdoorsy",
+    max: "Outgoing",
   },
   {
     key: "noiseLevel",
@@ -62,8 +62,7 @@ export default function VibePreferences({ data, onChange, onComplete, onBack }: 
       <span className="ob-card__inset" />
 
       <div className="ob-card__body">
-        <p className="ob-progress">2/2</p>
-        <h2 className="ob-card__body-title">Vibe preferences</h2>
+<h2 className="ob-card__body-title">Vibe preferences</h2>
 
         <div className="ob-sliders ob-form">
           {SLIDERS.map(({ key, label, min, mid, max }) => (
@@ -92,7 +91,7 @@ export default function VibePreferences({ data, onChange, onComplete, onBack }: 
             ←
           </button>
           <button className="ob-nav__next" onClick={onComplete}>
-            Complete ▶
+            Next ▶
           </button>
         </div>
       </div>

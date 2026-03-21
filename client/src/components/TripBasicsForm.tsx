@@ -41,8 +41,7 @@ export default function TripBasicsForm({ data, onChange, onNext, onBack }: Props
       <span className="ob-card__inset" />
 
       <div className="ob-card__body">
-        <p className="ob-progress">1/1</p>
-        <h2 className="ob-card__body-title">Some basic details</h2>
+<h2 className="ob-card__body-title">Some basic details</h2>
 
         <div className="ob-form">
           <div className="ob-form__row">

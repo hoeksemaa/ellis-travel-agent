@@ -5,18 +5,14 @@ import "../LandingPage.css";
 import "./onboarding.css";
 
 interface Props {
-  onNext: (code: string) => void;
+  onNewRoom: (username: string) => void;
+  onJoinRoom: (username: string) => void;
   onBack: () => void;
 }
 
-export default function JoinRoom({ onNext, onBack }: Props) {
-  const [code, setCode] = useState("");
-
-  function handleJoin() {
-    if (code.trim()) {
-      onNext(code.trim());
-    }
-  }
+export default function UsernameScreen({ onNewRoom, onJoinRoom, onBack }: Props) {
+  const [username, setUsername] = useState("");
+  const valid = username.trim().length > 0;
 
   return (
     <div className="landing">
@@ -35,18 +31,17 @@ export default function JoinRoom({ onNext, onBack }: Props) {
         <span className="card__border-inset" />
 
         <div className="modal-body">
-          <p className="modal-body__title">Join a Room</p>
+          <p className="modal-body__title">What's your username?</p>
 
           <div className="ob-form">
             <div className="ob-form__group">
-              <label className="ob-form__label">Room code</label>
+              <label className="ob-form__label">Username</label>
               <input
                 className="ob-form__input"
                 type="text"
-                placeholder="e.g. AZURE-342"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleJoin()}
+                placeholder="e.g. alex"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 autoFocus
               />
             </div>
@@ -56,14 +51,24 @@ export default function JoinRoom({ onNext, onBack }: Props) {
             <button className="ob-nav__prev" onClick={onBack} aria-label="Back">
               ←
             </button>
-            <button
-              className="ob-nav__next"
-              onClick={handleJoin}
-              disabled={!code.trim()}
-              style={{ opacity: code.trim() ? 1 : 0.5 }}
-            >
-              Join ▶
-            </button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button
+                className="btn btn--outline"
+                onClick={() => valid && onJoinRoom(username.trim())}
+                disabled={!valid}
+                style={{ opacity: valid ? 1 : 0.5, fontSize: "14px", padding: "8px 18px" }}
+              >
+                Join Room
+              </button>
+              <button
+                className="ob-nav__next"
+                onClick={() => valid && onNewRoom(username.trim())}
+                disabled={!valid}
+                style={{ opacity: valid ? 1 : 0.5 }}
+              >
+                New Room ▶
+              </button>
+            </div>
           </div>
         </div>
       </div>
