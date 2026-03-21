@@ -1,0 +1,209 @@
+/* ── App shell (screens 4–14) ─────────────────── */
+
+.ob-layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: white;
+}
+
+.ob-layout__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.ob-layout__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Top bar ──────────────────────────────────── */
+
+.ob-topbar {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1014px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.ob-topbar__brand {
+  font-family: "Dancing Script", cursive;
+  font-size: 32px;
+  color: #344a37;
+  line-height: 1;
+}
+
+.ob-topbar__tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Nav tabs ─────────────────────────────────── */
+
+.ob-tab {
+  font-family: "Domine", serif;
+  font-size: 13px;
+  font-weight: 400;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: transparent;
+  color: #888;
+  cursor: default;
+  pointer-events: none;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ob-tab--active {
+  background: #344a37;
+  border-color: #344a37;
+  color: white;
+}
+
+.ob-tab--done {
+  background: #344a37;
+  border-color: #344a37;
+  color: white;
+}
+
+/* ── Main card ────────────────────────────────── */
+
+.ob-card {
+  position: relative;
+  z-index: 1;
+  width: 1014px;
+  max-width: 94vw;
+  height: 480px;
+  max-height: 80vh;
+  border-radius: 20px;
+  border: 1px solid black;
+  overflow: hidden;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  background: white;
+}
+
+/* Card chrome (dots + inset border) */
+.ob-card__dot {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.ob-card__dot--tl { top: 15px; left: 15px; }
+.ob-card__dot--tr { top: 15px; right: 15px; }
+.ob-card__dot--bl { bottom: 15px; left: 15px; }
+.ob-card__dot--br { bottom: 15px; right: 15px; }
+
+.ob-card__inset {
+  position: absolute;
+  inset: 22px;
+  z-index: 9;
+  pointer-events: none;
+  border: 1px solid black;
+}
+
+/* ── Split layout (intro screens 4, 6, 8) ──────── */
+
+.ob-card--split {
+  display: flex;
+}
+
+.ob-card__image {
+  width: 45%;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ob-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% center;
+}
+
+.ob-card__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px 48px 36px;
+  position: relative;
+  z-index: 2;
+}
+
+.ob-section-part {
+  font-family: "Domine", serif;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 10px;
+}
+
+.ob-section-title {
+  font-family: "Domine", serif;
+  font-size: 26px;
+  font-weight: 400;
+  color: #222;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+.ob-section-subtitle {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.ob-card__right .ob-nav {
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+/* ── Full-width card content (forms, questions) ── */
+
+.ob-card--full {
+  display: flex;
+  flex-direction: column;
+}
+
+.ob-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 48px 28px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 2;
+}
+
+.ob-card__body-title {
+  font-family: "Domine", serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: #222;
+  margin-bottom: 20px;
+}
+
+.ob-card__body .ob-nav {
+  margin-top: auto;
+  padding-top: 20px;
+}
