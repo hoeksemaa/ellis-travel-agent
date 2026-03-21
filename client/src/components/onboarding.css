@@ -1,0 +1,341 @@
+/* ── Shared onboarding styles (screens 2–14) ───── */
+
+/* ── Modal form layout (screens 2–3) ─────────── */
+
+.modal-body {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 36px 44px 28px;
+  gap: 20px;
+}
+
+.modal-body__title {
+  font-family: "Domine", serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: black;
+  text-align: center;
+}
+
+/* ── Form elements ────────────────────────────── */
+
+.ob-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.ob-form__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.ob-form__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.ob-form__label {
+  font-family: "Domine", serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #555;
+  text-transform: none;
+}
+
+.ob-form__input,
+.ob-form__select {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: black;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ob-form__input::placeholder {
+  color: #aaa;
+}
+
+.ob-form__input:focus,
+.ob-form__select:focus {
+  border-color: #344a37;
+}
+
+.ob-form__select-wrap {
+  position: relative;
+}
+
+.ob-form__select-wrap::after {
+  content: "▾";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #555;
+}
+
+/* Room code field */
+.ob-code-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ob-code-row input {
+  flex: 1;
+  font-family: "Domine", serif;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: #344a37;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+}
+
+.ob-code-row input:focus {
+  border-color: #344a37;
+}
+
+.ob-copy-btn {
+  flex-shrink: 0;
+  font-family: "Domine", serif;
+  font-size: 13px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #344a37;
+  background: transparent;
+  color: #344a37;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ob-copy-btn:hover { background: rgba(52, 74, 55, 0.07); }
+.ob-copy-btn--copied { background: rgba(52, 74, 55, 0.12); color: #344a37; }
+
+/* ── Bottom navigation row ────────────────────── */
+
+.ob-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.ob-nav--end {
+  justify-content: flex-end;
+}
+
+.ob-nav__prev {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.15s ease;
+  font-family: "Domine", serif;
+}
+
+.ob-nav__prev:hover { background: rgba(0,0,0,0.06); }
+
+.ob-nav__next {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 10px;
+  border: none;
+  background: #344a37;
+  color: white;
+  font-family: "Domine", serif;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.ob-nav__next:hover  { background: #2a3d2d; }
+.ob-nav__next:active { background: #1f2e22; }
+
+/* ── Radio question ───────────────────────────── */
+
+.ob-radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ob-radio-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.ob-radio-option input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  border: 1.5px solid #888;
+  border-radius: 50%;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ob-radio-option input[type="radio"]:checked {
+  border-color: #344a37;
+  background: radial-gradient(circle, #344a37 40%, transparent 45%);
+  border-width: 1.5px;
+  box-shadow: inset 0 0 0 3px white, inset 0 0 0 5px #344a37;
+}
+
+.ob-radio-option__label {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+/* ── Interest chips ───────────────────────────── */
+
+.ob-chips {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.ob-chip {
+  font-family: "Domine", serif;
+  font-size: 13px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background: white;
+  color: #333;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ob-chip:hover {
+  border-color: #344a37;
+}
+
+.ob-chip--active {
+  background: #344a37;
+  border-color: #344a37;
+  color: white;
+}
+
+.ob-chip--active::after {
+  content: "✓";
+  margin-left: auto;
+  font-size: 12px;
+}
+
+/* ── Sliders ──────────────────────────────────── */
+
+.ob-sliders {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px 40px;
+}
+
+.ob-slider-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ob-slider-group__label {
+  font-family: "Domine", serif;
+  font-size: 13px;
+  font-weight: 400;
+  color: #333;
+}
+
+.ob-slider-group__track {
+  position: relative;
+}
+
+.ob-slider-group input[type="range"] {
+  width: 100%;
+  height: 4px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.ob-slider-group input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #344a37;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.ob-slider-group input[type="range"]::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #344a37;
+  cursor: pointer;
+  border: none;
+}
+
+.ob-slider-group__ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4px;
+}
+
+.ob-slider-group__ticks span {
+  font-family: "Domine", serif;
+  font-size: 11px;
+  color: #999;
+}
+
+/* ── Progress label ───────────────────────────── */
+
+.ob-progress {
+  font-family: "Domine", serif;
+  font-size: 11px;
+  color: #999;
+  margin-bottom: 4px;
+}
