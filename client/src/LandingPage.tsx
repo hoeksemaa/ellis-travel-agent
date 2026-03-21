@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import bgLandscape from "./assets/bg-landscape.png";
 import cardTexture from "./assets/card-texture.png";
 import "./LandingPage.css";
@@ -24,8 +25,9 @@ export default function LandingPage({ onStart }: Props) {
         <span className="card__dot card__dot--br" />
         <span className="card__border-inset" />
 
-        <div className="card__content">
-          <h1 className="brand">twopeople</h1>
+        {sessionCode && (
+          <span className="card__code-badge">{sessionCode}</span>
+        )}
 
           <p className="tagline">
             less arguing. more traveling.

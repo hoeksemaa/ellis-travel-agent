@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import LandingPage from "./LandingPage";
+import WelcomeScreen from "./screens/WelcomeScreen";
 import CreateRoom from "./components/CreateRoom";
 import JoinRoom from "./components/JoinRoom";
 import UsernameScreen from "./components/UsernameScreen";
@@ -9,6 +10,10 @@ import TripBasicsForm from "./components/TripBasicsForm";
 import PersonaQuestion from "./components/PersonaQuestion";
 import TravelInterests from "./components/TravelInterests";
 import VibePreferences from "./components/VibePreferences";
+import WaitingScreen from "./screens/WaitingScreen";
+import VotingScreen from "./screens/VotingScreen";
+import ResultScreen from "./screens/ResultScreen";
+import { api } from "./api";
 
 export type Step =
   | "landing"
@@ -59,31 +64,40 @@ const defaultFlow: FlowData = {
     crowdComfort: 50,
     energyLevel: 50,
     noiseLevel: 50,
-  },
-};
+  });
 
-export type NavSection = "trip-basics" | "persona" | "preferences";
+  /* ── Handlers ─────────────────────────────────── */
 
-function navSectionFor(step: Step): NavSection {
-  if (step === "trip-basics-intro" || step === "trip-basics-form") {
-    return "trip-basics";
+  function handleWelcome(name: string) {
+    setUsername(name);
+    setStep("create-or-join");
   }
-  if (
-    step === "persona-intro" ||
-    step === "persona-question" ||
-    step === "activities-intro"
-  ) {
-    return "persona";
+
+  async function handleCreate() {
+    const { code } = await api.createSession(username);
+    setSessionCode(code);
+    setStep("create-room");
   }
-  return "preferences";
-}
 
-export default function App() {
-  const [step, setStep] = useState<Step>("landing");
-  const [flow, setFlow] = useState<FlowData>(defaultFlow);
+  async function handleJoin(code: string) {
+    await api.joinSession(code, username);
+    setSessionCode(code);
+    setStep("trip-basics-intro");
+  }
 
-  function update(partial: Partial<FlowData>) {
-    setFlow((f) => ({ ...f, ...partial }));
+  async function handlePersonaDone() {
+    // Submit persona quiz (trip basics + persona answer) to server
+    await api.submitQuiz(sessionCode, username, {
+      quizId: "persona",
+      answers: [
+        { questionId: "country", selected: tripBasics.country },
+        { questionId: "city", selected: tripBasics.city },
+        { questionId: "travelDates", selected: tripBasics.travelDates },
+        { questionId: "relationship", selected: tripBasics.relationship },
+        { questionId: "planningStyle", selected: personaAnswer },
+      ],
+    });
+    setStep("prefs-intro");
   }
 
   if (step === "landing") {
@@ -106,49 +120,125 @@ export default function App() {
     );
   }
 
-  if (step === "create-room") {
+  const handleGeneratingDone = useCallback(() => {
+    setStep("voting");
+  }, []);
+
+  function handleVotingDone() {
+    setStep("result");
+  }
+
+  /* ── Onboarding steps (wrapped in OnboardingLayout) ── */
+
+  const onboardingSteps = [
+    "trip-basics-intro",
+    "trip-basics",
+    "persona-intro",
+    "persona",
+    "prefs-intro",
+    "travel-interests",
+    "vibe-preferences",
+  ];
+
+  if (onboardingSteps.includes(step)) {
     return (
-      <CreateRoom
-        onNext={(code) => {
-          update({ path: "new", roomCode: code });
-          setStep("trip-basics-intro");
-        }}
-        onBack={() => setStep("landing")}
-      />
+      <OnboardingLayout navSection={navSectionFor(step)}>
+        {step === "trip-basics-intro" && (
+          <SectionIntro
+            part="Part 1 of 3"
+            title="Let's start with the basics"
+            subtitle="Tell us a little about where and when you're thinking of traveling."
+            onNext={() => setStep("trip-basics")}
+          />
+        )}
+
+        {step === "trip-basics" && (
+          <TripBasicsForm
+            data={tripBasics}
+            onChange={setTripBasics}
+            onNext={() => setStep("persona-intro")}
+            onBack={() => setStep("trip-basics-intro")}
+          />
+        )}
+
+        {step === "persona-intro" && (
+          <SectionIntro
+            part="Part 2 of 3"
+            title="What kind of traveler are you?"
+            subtitle="We'll use this to find experiences that match your style."
+            onNext={() => setStep("persona")}
+            onBack={() => setStep("trip-basics")}
+          />
+        )}
+
+        {step === "persona" && (
+          <PersonaQuestion
+            value={personaAnswer}
+            onChange={setPersonaAnswer}
+            onNext={handlePersonaDone}
+            onBack={() => setStep("persona-intro")}
+          />
+        )}
+
+        {step === "prefs-intro" && (
+          <SectionIntro
+            part="Part 3 of 3"
+            title="Your preferences"
+            subtitle="Help us understand what you enjoy so we can tailor recommendations."
+            onNext={() => setStep("travel-interests")}
+            onBack={() => setStep("persona")}
+          />
+        )}
+
+        {step === "travel-interests" && (
+          <TravelInterests
+            selected={preferences.interests}
+            onChange={(interests) => setPreferences((p) => ({ ...p, interests }))}
+            onNext={() => setStep("vibe-preferences")}
+            onBack={() => setStep("prefs-intro")}
+          />
+        )}
+
+        {step === "vibe-preferences" && (
+          <VibePreferences
+            data={preferences}
+            onChange={setPreferences}
+            onComplete={handlePrefsComplete}
+            onBack={() => setStep("travel-interests")}
+          />
+        )}
+      </OnboardingLayout>
     );
   }
 
-  if (step === "join-room") {
-    return (
-      <JoinRoom
-        onNext={(code) => {
-          update({ path: "join", roomCode: code });
-          setStep("persona-intro");
-        }}
-        onBack={() => setStep("landing")}
-      />
-    );
-  }
-
-  const navSection = navSectionFor(step);
+  /* ── Non-onboarding steps ──────────────────────── */
 
   return (
-    <OnboardingLayout navSection={navSection}>
-      {step === "trip-basics-intro" && (
-        <SectionIntro
-          part="Part 1"
-          title="Let's get the basics down."
-          subtitle="A few quick details so we know where you're headed."
-          onNext={() => setStep("trip-basics-form")}
-        />
+    <>
+      {step === "welcome" && (
+        <LandingPage>
+          <WelcomeScreen onNext={handleWelcome} />
+        </LandingPage>
       )}
-      {step === "trip-basics-form" && (
-        <TripBasicsForm
-          data={flow.tripBasics}
-          onChange={(tripBasics) => update({ tripBasics })}
-          onNext={() => setStep("persona-intro")}
-          onBack={() => setStep("trip-basics-intro")}
-        />
+
+      {step === "create-or-join" && (
+        <LandingPage>
+          <div className="card__content">
+            <h2 className="heading">Hi, {username}!</h2>
+            <p className="subtitle">Ready to plan a trip together?</p>
+            <div className="form" style={{ gap: "12px" }}>
+              <button className="form__button" onClick={handleCreate}>
+                Start a new trip
+              </button>
+              <button
+                className="form__button form__button--outline"
+                onClick={() => setStep("join-room")}
+              >
+                Join with a code
+              </button>
+            </div>
+          </div>
+        </LandingPage>
       )}
       {step === "persona-intro" && (
         <SectionIntro
@@ -158,12 +248,11 @@ export default function App() {
           onNext={() => setStep("persona-question")}
         />
       )}
-      {step === "persona-question" && (
-        <PersonaQuestion
-          value={flow.persona.planningStyle}
-          onChange={(planningStyle) => update({ persona: { planningStyle } })}
-          onNext={() => setStep("activities-intro")}
-          onBack={() => setStep("persona-intro")}
+
+      {step === "join-room" && (
+        <JoinRoom
+          onNext={handleJoin}
+          onBack={() => setStep("create-or-join")}
         />
       )}
       {step === "activities-intro" && (
@@ -174,27 +263,18 @@ export default function App() {
           onNext={() => setStep("travel-interests")}
         />
       )}
-      {step === "travel-interests" && (
-        <TravelInterests
-          selected={flow.preferences.interests}
-          onChange={(interests) =>
-            update({ preferences: { ...flow.preferences, interests } })
-          }
-          onNext={() => setStep("vibe-prefs")}
-          onBack={() => setStep("activities-intro")}
-        />
+
+      {step === "voting" && (
+        <LandingPage sessionCode={sessionCode}>
+          <VotingScreen code={sessionCode} username={username} onDone={handleVotingDone} />
+        </LandingPage>
       )}
-      {step === "vibe-prefs" && (
-        <VibePreferences
-          data={flow.preferences}
-          onChange={(preferences) => update({ preferences })}
-          onComplete={() => {
-            console.log("Flow complete:", flow);
-            // TODO: submit to backend
-          }}
-          onBack={() => setStep("travel-interests")}
-        />
+
+      {step === "result" && (
+        <LandingPage sessionCode={sessionCode}>
+          <ResultScreen code={sessionCode} />
+        </LandingPage>
       )}
-    </OnboardingLayout>
+    </>
   );
 }

@@ -44,7 +44,7 @@ html, body, #root {
   z-index: 1;
   width: 1014px;
   max-width: 92vw;
-  height: 564px;
+  min-height: 480px;
   max-height: 88vh;
   border-radius: 20px;
   border: 1px solid black;
@@ -54,10 +54,8 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
 }
 
-/* White base + paper texture */
 .card::before {
   content: "";
   position: absolute;
@@ -83,7 +81,13 @@ html, body, #root {
   opacity: 0.5;
 }
 
-/* Card content sits above texture */
+.card--sm {
+  width: 480px;
+  min-height: 320px;
+}
+
+/* ── Card Content ─────────────────────────────── */
+
 .card__content {
   position: relative;
   z-index: 2;
@@ -91,6 +95,17 @@ html, body, #root {
   flex-direction: column;
   align-items: center;
   gap: 24px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.card__content--scroll {
+  max-height: calc(88vh - 40px);
+  overflow-y: auto;
+  justify-content: flex-start;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.2) transparent;
 }
 
 /* ── Decorative Border Inset ──────────────────── */
@@ -101,10 +116,8 @@ html, body, #root {
   z-index: 3;
   pointer-events: none;
   border: 1px solid black;
-  border-radius: 0;
 }
 
-/* Corner dots */
 .card__dot {
   position: absolute;
   width: 15px;
@@ -119,12 +132,22 @@ html, body, #root {
 .card__dot--bl { bottom: 15px; left: 15px; }
 .card__dot--br { bottom: 15px; right: 15px; }
 
-/* ── Small card variant (screens 2–3) ─────────── */
+/* ── Session Code Badge ───────────────────────── */
 
-.card--sm {
-  width: 560px;
-  height: 320px;
-  gap: 0;
+.card__code-badge {
+  position: absolute;
+  top: 32px;
+  right: 36px;
+  z-index: 5;
+  font-family: "Domine", serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #344a37;
+  background: rgba(52, 74, 55, 0.06);
+  border: 1px solid rgba(52, 74, 55, 0.2);
+  padding: 4px 10px;
+  border-radius: 6px;
+  user-select: all;
 }
 
 /* ── Typography ───────────────────────────────── */
@@ -136,6 +159,14 @@ html, body, #root {
   line-height: 1;
 }
 
+.heading {
+  font-family: "Domine", serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: black;
+  text-align: center;
+}
+
 .tagline {
   font-family: "Domine", serif;
   font-size: 28px;
@@ -145,45 +176,363 @@ html, body, #root {
   line-height: 1.5;
 }
 
-/* ── Landing CTA buttons ──────────────────────── */
-
-.landing__actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
+.subtitle {
+  font-family: "Domine", serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #6c6c6c;
+  text-align: center;
 }
 
-/* ── Shared button primitives ─────────────────── */
+/* ── Form Elements ────────────────────────────── */
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 28px;
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 382px;
+  max-width: 100%;
+}
+
+.form__label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form__label-text {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #6c6c6c;
+}
+
+.form__input {
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: transparent;
+  font-family: "Domine", serif;
+  font-size: 16px;
+  color: black;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.form__input:focus {
+  border-color: #344a37;
+}
+
+.form__input::placeholder {
+  color: #6c6c6c;
+}
+
+.form__input--code {
+  text-align: center;
+  font-size: 24px;
+  letter-spacing: 8px;
+  font-weight: 500;
+}
+
+.form__button {
+  padding: 14px 28px;
+  background: #344a37;
+  color: white;
+  border: none;
   border-radius: 12px;
   font-family: "Domine", serif;
   font-size: 16px;
   font-weight: 400;
   cursor: pointer;
-  border: none;
-  transition: background 0.15s ease, color 0.15s ease;
-  white-space: nowrap;
+  transition: background 0.2s ease;
 }
 
-.btn--primary {
-  background: #344a37;
-  color: white;
-  border: none;
+.form__button:hover:not(:disabled) {
+  background: #2a3d2d;
 }
 
-.btn--primary:hover  { background: #2a3d2d; }
-.btn--primary:active { background: #1f2e22; }
+.form__button:active:not(:disabled) {
+  background: #1f2e22;
+}
 
-.btn--outline {
+.form__button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form__button--outline {
   background: transparent;
   color: #344a37;
   border: 1px solid #344a37;
 }
 
-.btn--outline:hover  { background: rgba(52, 74, 55, 0.06); }
-.btn--outline:active { background: rgba(52, 74, 55, 0.12); }
+.form__button--outline:hover:not(:disabled) {
+  background: rgba(52, 74, 55, 0.08);
+}
+
+.form__link {
+  background: none;
+  border: none;
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #6c6c6c;
+  cursor: pointer;
+  text-align: center;
+}
+
+.form__link:hover {
+  color: black;
+}
+
+.form__error {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #b33;
+  text-align: center;
+}
+
+/* ── Session Code Display ─────────────────────── */
+
+.code-display {
+  font-family: "Domine", serif;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: 12px;
+  color: #344a37;
+  background: rgba(52, 74, 55, 0.06);
+  padding: 16px 32px;
+  border-radius: 12px;
+  border: 2px dashed #344a37;
+  user-select: all;
+}
+
+/* ── Spinner ──────────────────────────────────── */
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(52, 74, 55, 0.2);
+  border-top-color: #344a37;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Quiz ─────────────────────────────────────── */
+
+.quiz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: 100%;
+}
+
+.quiz-question {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-question__text {
+  font-family: "Domine", serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: black;
+}
+
+.quiz-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quiz-option {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  background: transparent;
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quiz-option:hover {
+  border-color: #344a37;
+  color: #344a37;
+}
+
+.quiz-option--selected {
+  background: #344a37;
+  color: white;
+  border-color: #344a37;
+}
+
+.quiz-option--selected:hover {
+  background: #2a3d2d;
+  color: white;
+}
+
+/* ── Voting ───────────────────────────────────── */
+
+.vote-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.vote-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.vote-card__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vote-card__name {
+  font-family: "Domine", serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: black;
+}
+
+.vote-card__desc {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+}
+
+.vote-card__reason {
+  font-family: "Domine", serif;
+  font-size: 12px;
+  color: #888;
+  font-style: italic;
+}
+
+.vote-card__btn {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  background: white;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.vote-card__btn:hover {
+  border-color: #344a37;
+}
+
+.vote-card__btn--up {
+  border-color: #344a37;
+  background: rgba(52, 74, 55, 0.1);
+}
+
+.vote-card__btn--down {
+  border-color: #b33;
+  background: rgba(187, 51, 51, 0.1);
+}
+
+/* ── Result ───────────────────────────────────── */
+
+.result__name {
+  font-family: "Dancing Script", cursive;
+  font-size: 52px;
+  color: #344a37;
+  text-align: center;
+}
+
+.result__body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.result__reason {
+  font-family: "Domine", serif;
+  font-size: 16px;
+  color: #344a37;
+  font-style: italic;
+  text-align: center;
+}
+
+.result__desc {
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: #333;
+  line-height: 1.6;
+}
+
+.result__desc p {
+  margin-bottom: 8px;
+}
+
+/* ── Legacy invite form (kept for reference) ──── */
+
+.invite-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 382px;
+  max-width: 90vw;
+  border: 1px solid black;
+  border-radius: 12px;
+  padding: 8px 8px 8px 16px;
+  background: transparent;
+}
+
+.invite-form__input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: "Domine", serif;
+  font-size: 14px;
+  color: black;
+}
+
+.invite-form__input::placeholder {
+  color: #6c6c6c;
+}
+
+.invite-form__button {
+  flex-shrink: 0;
+  padding: 14px 28px;
+  background: #344a37;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: "Domine", serif;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.invite-form__button:hover {
+  background: #2a3d2d;
+}
+
+.invite-form__button:active {
+  background: #1f2e22;
+}

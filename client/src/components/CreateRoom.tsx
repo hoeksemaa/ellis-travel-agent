@@ -5,19 +5,12 @@ import "../LandingPage.css";
 import "./onboarding.css";
 
 interface Props {
-  onNext: (code: string) => void;
+  code: string;
+  onNext: () => void;
   onBack: () => void;
 }
 
-function generateCode(): string {
-  const words = ["AZURE", "CEDAR", "DRIFT", "EMBER", "FABLE", "GROVE", "HAVEN", "IVORY"];
-  const word = words[Math.floor(Math.random() * words.length)];
-  const num = Math.floor(Math.random() * 900) + 100;
-  return `${word}-${num}`;
-}
-
-export default function CreateRoom({ onNext, onBack }: Props) {
-  const [code] = useState(generateCode);
+export default function CreateRoom({ code, onNext, onBack }: Props) {
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
@@ -65,7 +58,7 @@ export default function CreateRoom({ onNext, onBack }: Props) {
             <button className="ob-nav__prev" onClick={onBack} aria-label="Back">
               ←
             </button>
-            <button className="ob-nav__next" onClick={() => onNext(code)}>
+            <button className="ob-nav__next" onClick={onNext}>
               Next ▶
             </button>
           </div>
