@@ -25,9 +25,7 @@ export default function PersonaQuestion({ value, onChange, onNext, onBack }: Pro
       <span className="ob-card__inset" />
 
       <div className="ob-card__body">
-        <p className="ob-progress">1/7</p>
-
-        <h2 className="ob-card__body-title">
+<h2 className="ob-card__body-title">
           It's day two of the trip. Nothing is planned yet for today. You feel:
         </h2>
 

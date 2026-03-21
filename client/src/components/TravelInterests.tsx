@@ -39,8 +39,7 @@ export default function TravelInterests({ selected, onChange, onNext, onBack }: 
       <span className="ob-card__inset" />
 
       <div className="ob-card__body">
-        <p className="ob-progress">1/2</p>
-        <h2 className="ob-card__body-title">Travel interests</h2>
+<h2 className="ob-card__body-title">Travel interests</h2>
 
         <div className="ob-chips ob-form">
           {INTERESTS.map((interest) => (

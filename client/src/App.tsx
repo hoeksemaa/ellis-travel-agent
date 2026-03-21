@@ -2,6 +2,7 @@ import { useState } from "react";
 import LandingPage from "./LandingPage";
 import CreateRoom from "./components/CreateRoom";
 import JoinRoom from "./components/JoinRoom";
+import UsernameScreen from "./components/UsernameScreen";
 import OnboardingLayout from "./components/OnboardingLayout";
 import SectionIntro from "./components/SectionIntro";
 import TripBasicsForm from "./components/TripBasicsForm";
@@ -11,6 +12,7 @@ import VibePreferences from "./components/VibePreferences";
 
 export type Step =
   | "landing"
+  | "username"
   | "create-room"
   | "join-room"
   | "trip-basics-intro"
@@ -38,6 +40,7 @@ export interface Preferences {
 
 export interface FlowData {
   path: "new" | "join" | null;
+  username: string;
   roomCode: string;
   tripBasics: TripBasics;
   persona: { planningStyle: string };
@@ -46,6 +49,7 @@ export interface FlowData {
 
 const defaultFlow: FlowData = {
   path: null,
+  username: "",
   roomCode: "",
   tripBasics: { country: "", city: "", travelDates: "", relationship: "" },
   persona: { planningStyle: "" },
@@ -83,10 +87,21 @@ export default function App() {
   }
 
   if (step === "landing") {
+    return <LandingPage onStart={() => setStep("username")} />;
+  }
+
+  if (step === "username") {
     return (
-      <LandingPage
-        onNewRoom={() => setStep("create-room")}
-        onJoinRoom={() => setStep("join-room")}
+      <UsernameScreen
+        onNewRoom={(username) => {
+          update({ username });
+          setStep("create-room");
+        }}
+        onJoinRoom={(username) => {
+          update({ username });
+          setStep("join-room");
+        }}
+        onBack={() => setStep("landing")}
       />
     );
   }
@@ -141,11 +156,6 @@ export default function App() {
           title="Now let's get to know your travel styles."
           subtitle="Excited — this is exactly what travel should feel like"
           onNext={() => setStep("persona-question")}
-          onBack={() =>
-            flow.path === "join"
-              ? setStep("join-room")
-              : setStep("trip-basics-form")
-          }
         />
       )}
       {step === "persona-question" && (
@@ -162,7 +172,6 @@ export default function App() {
           title="And what would you like to do on this trip?"
           subtitle="Excited — this is exactly what travel should feel like"
           onNext={() => setStep("travel-interests")}
-          onBack={() => setStep("persona-question")}
         />
       )}
       {step === "travel-interests" && (

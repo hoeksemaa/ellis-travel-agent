@@ -33,7 +33,7 @@ export default function CreateRoom({ onNext, onBack }: Props) {
         <img src={bgLandscape} alt="" />
       </div>
 
-      <div className="card card--sm">
+      <div className="card">
         <div className="card__texture">
           <img src={cardTexture} alt="" />
         </div>

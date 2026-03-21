@@ -123,14 +123,14 @@
 /* ── Split layout (intro screens 4, 6, 8) ──────── */
 
 .ob-card--split {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
 
 .ob-card__image {
-  width: 45%;
-  flex-shrink: 0;
   overflow: hidden;
   position: relative;
+  padding: 40px 0 40px 40px;
 }
 
 .ob-card__image img {
@@ -138,6 +138,7 @@
   height: 100%;
   object-fit: cover;
   object-position: 60% center;
+  border-radius: 6px;
 }
 
 .ob-card__right {

@@ -3,11 +3,10 @@ import cardTexture from "./assets/card-texture.png";
 import "./LandingPage.css";
 
 interface Props {
-  onNewRoom: () => void;
-  onJoinRoom: () => void;
+  onStart: () => void;
 }
 
-export default function LandingPage({ onNewRoom, onJoinRoom }: Props) {
+export default function LandingPage({ onStart }: Props) {
   return (
     <div className="landing">
       <div className="landing__bg">
@@ -35,11 +34,8 @@ export default function LandingPage({ onNewRoom, onJoinRoom }: Props) {
           </p>
 
           <div className="landing__actions">
-            <button className="btn btn--primary" onClick={onNewRoom}>
-              New Room
-            </button>
-            <button className="btn btn--outline" onClick={onJoinRoom}>
-              Join Room
+            <button className="btn btn--primary" onClick={onStart}>
+              Start planning
             </button>
           </div>
         </div>
