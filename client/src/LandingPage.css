@@ -184,6 +184,40 @@ html, body, #root {
   text-align: center;
 }
 
+/* ── Landing Actions ─────────────────────────── */
+
+.landing__actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ── Buttons ─────────────────────────────────── */
+
+.btn {
+  font-family: "Domine", serif;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn--primary {
+  background: #344a37;
+  color: white;
+}
+
+.btn--primary:hover {
+  background: #2a3d2d;
+}
+
+.btn--primary:active {
+  background: #1f2e22;
+}
+
 /* ── Form Elements ────────────────────────────── */
 
 .form {

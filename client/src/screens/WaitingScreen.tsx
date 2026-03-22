@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { api, type SessionStatus } from "../api";
+import bgLandscape from "../assets/bg-landscape.png";
+import cardTexture from "../assets/card-texture.png";
+import "../LandingPage.css";
 
 interface WaitingScreenProps {
   code: string;
@@ -35,23 +38,40 @@ export default function WaitingScreen({ code, targetStatus, message, subMessage,
     return () => clearInterval(interval);
   }, [code, targetStatus, onReady]);
 
-  if (error) {
-    return (
-      <div className="card__content">
-        <h2 className="heading">Something went wrong</h2>
-        <p className="subtitle">{error}</p>
-        <button className="form__button" onClick={() => window.location.reload()}>
-          Try Again
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="card__content">
-      <h2 className="heading">{message}</h2>
-      {subMessage && <p className="subtitle">{subMessage}</p>}
-      <div className="spinner" />
+    <div className="landing">
+      <div className="landing__bg">
+        <img src={bgLandscape} alt="" />
+      </div>
+
+      <div className="card">
+        <div className="card__texture">
+          <img src={cardTexture} alt="" />
+        </div>
+        <span className="card__dot card__dot--tl" />
+        <span className="card__dot card__dot--tr" />
+        <span className="card__dot card__dot--bl" />
+        <span className="card__dot card__dot--br" />
+        <span className="card__border-inset" />
+
+        <div className="card__content">
+          {error ? (
+            <>
+              <h2 className="heading">Something went wrong</h2>
+              <p className="subtitle">{error}</p>
+              <button className="form__button" onClick={() => window.location.reload()}>
+                Try Again
+              </button>
+            </>
+          ) : (
+            <>
+              <h2 className="heading">{message}</h2>
+              {subMessage && <p className="subtitle">{subMessage}</p>}
+              <div className="spinner" />
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
