@@ -46,13 +46,8 @@ export default function UsernameScreen({ onNewRoom, onSolo, onJoinRoom, onBack }
                 autoFocus
               />
             </div>
-          </div>
 
-          <div className="ob-nav">
-            <button className="ob-nav__prev" onClick={onBack} aria-label="Back">
-              ←
-            </button>
-            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "8px" }}>
               <button
                 className="btn btn--outline"
                 onClick={() => valid && onJoinRoom(username.trim())}
@@ -78,6 +73,12 @@ export default function UsernameScreen({ onNewRoom, onSolo, onJoinRoom, onBack }
                 New Room ▶
               </button>
             </div>
+          </div>
+
+          <div className="ob-nav">
+            <button className="ob-nav__prev" onClick={onBack} aria-label="Back">
+              ←
+            </button>
           </div>
         </div>
       </div>
