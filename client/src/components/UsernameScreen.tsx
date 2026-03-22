@@ -6,11 +6,12 @@ import "./onboarding.css";
 
 interface Props {
   onNewRoom: (username: string) => void;
+  onSolo: (username: string) => void;
   onJoinRoom: (username: string) => void;
   onBack: () => void;
 }
 
-export default function UsernameScreen({ onNewRoom, onJoinRoom, onBack }: Props) {
+export default function UsernameScreen({ onNewRoom, onSolo, onJoinRoom, onBack }: Props) {
   const [username, setUsername] = useState("");
   const valid = username.trim().length > 0;
 
@@ -51,7 +52,7 @@ export default function UsernameScreen({ onNewRoom, onJoinRoom, onBack }: Props)
             <button className="ob-nav__prev" onClick={onBack} aria-label="Back">
               ←
             </button>
-            <div style={{ display: "flex", gap: "8px" }}>
+            <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
               <button
                 className="btn btn--outline"
                 onClick={() => valid && onJoinRoom(username.trim())}
@@ -59,6 +60,14 @@ export default function UsernameScreen({ onNewRoom, onJoinRoom, onBack }: Props)
                 style={{ opacity: valid ? 1 : 0.5, fontSize: "14px", padding: "8px 18px" }}
               >
                 Join Room
+              </button>
+              <button
+                className="btn btn--outline"
+                onClick={() => valid && onSolo(username.trim())}
+                disabled={!valid}
+                style={{ opacity: valid ? 1 : 0.5, fontSize: "14px", padding: "8px 18px" }}
+              >
+                Go Solo
               </button>
               <button
                 className="ob-nav__next"

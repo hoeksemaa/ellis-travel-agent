@@ -66,6 +66,7 @@ export interface SessionUser {
 export interface Session {
   code: string;
   status: SessionStatus;
+  solo: boolean;
   users: { user1?: SessionUser; user2?: SessionUser };
   options?: Option[];
   result?: Option;
@@ -76,10 +77,10 @@ export const api = {
   getQuizzes: () =>
     request<{ quizzes: Quiz[] }>("/quizzes"),
 
-  createSession: (username: string) =>
+  createSession: (username: string, solo: boolean = false) =>
     request<{ code: string; session: Session }>("/session", {
       method: "POST",
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ username, solo }),
     }),
 
   joinSession: (code: string, username: string) =>

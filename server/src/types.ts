@@ -39,10 +39,10 @@ export type SessionStatus =
   | "lobby"
   | "persona_quiz"
   | "preference_quiz"
-  | "waiting"
   | "generating"
   | "voting"
-  | "complete";
+  | "complete"
+  | "error";
 
 export interface SessionUser {
   username: string;
@@ -54,6 +54,7 @@ export interface SessionUser {
 export interface Session {
   code: string;
   status: SessionStatus;
+  solo: boolean;
   users: {
     user1?: SessionUser;
     user2?: SessionUser;
