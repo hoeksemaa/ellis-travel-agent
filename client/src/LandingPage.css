@@ -25,6 +25,10 @@ html, body, #root {
   background: white;
 }
 
+.landing--desk {
+  background: #b5905a;
+}
+
 .landing__bg {
   position: absolute;
   inset: 0;
@@ -35,6 +39,92 @@ html, body, #root {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+/* ── Loading Cover ────────────────────────────── */
+
+.landing__loading {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  background: #b5905a;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+/* overlay classes removed — no longer used */
+
+/* Postcard back is now a 3D object in the scene — no CSS needed */
+
+/* CTA — positioned near the floating postcard (top-right) */
+.postcard-back__cta {
+  position: absolute;
+  z-index: 11;
+  top: 16%;
+  right: 23%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(18px, 2.2vw, 28px);
+  color: #2a2018;
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.postcard-back__cta--visible {
+  opacity: 1;
+  animation: cta-bob 2.5s ease-in-out infinite;
+}
+
+.postcard-back__cta-arrow {
+  font-size: 1.2em;
+}
+
+@keyframes cta-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ── Transition Flash ────────────────────────── */
+
+.landing__flash {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: white;
+  animation: flash-in 2s ease-in forwards;
+}
+
+@keyframes flash-in {
+  0% { opacity: 0; }
+  15% { opacity: 0.03; }
+  30% { opacity: 0.1; }
+  45% { opacity: 0.25; }
+  60% { opacity: 0.55; }
+  75% { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* ── Page fade-in (reverse flash — white to transparent) ── */
+
+.page-fade-in {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: white;
+  pointer-events: none;
+  animation: fade-out 2s ease-out forwards;
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  25% { opacity: 1; }
+  50% { opacity: 0.5; }
+  75% { opacity: 0.15; }
+  100% { opacity: 0; }
 }
 
 /* ── Card ─────────────────────────────────────── */

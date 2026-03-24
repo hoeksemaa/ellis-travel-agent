@@ -1,5 +1,5 @@
-import bgLandscape from "./assets/bg-landscape.png";
-import cardTexture from "./assets/card-texture.png";
+import { useState, useCallback, useEffect } from "react";
+import DeskScene from "./components/three/DeskScene";
 import "./LandingPage.css";
 
 interface Props {
@@ -7,37 +7,64 @@ interface Props {
 }
 
 export default function LandingPage({ onStart }: Props) {
+  const [sceneReady, setSceneReady] = useState(false);
+  const [showPostcard, setShowPostcard] = useState(false);
+  const [envelopeClicked, setEnvelopeClicked] = useState(false);
+  const [envelopeHovered, setEnvelopeHovered] = useState(false);
+  const [postcardDone, setPostcardDone] = useState(false);
+  const [textReady, setTextReady] = useState(false);
+
+  // Once scene is ready, wait a beat then show the postcard back
+  useEffect(() => {
+    if (!sceneReady) return;
+    const timer = setTimeout(() => setShowPostcard(true), 400);
+    return () => clearTimeout(timer);
+  }, [sceneReady]);
+
+  // After postcard fades in, show the "Start Planning" prompt
+  useEffect(() => {
+    if (!showPostcard) return;
+    const timer = setTimeout(() => setTextReady(true), 1200);
+    return () => clearTimeout(timer);
+  }, [showPostcard]);
+
+  const handleSceneReady = useCallback(() => setSceneReady(true), []);
+  const handleEnvelopeClicked = useCallback(() => setEnvelopeClicked(true), []);
+  const handleEnvelopeHover = useCallback((hovered: boolean) => setEnvelopeHovered(hovered), []);
+  const handleEnvelopeArrived = useCallback(() => {}, []);
+
+  const handlePostcardReady = useCallback(() => {
+    setPostcardDone(true);
+    // Flash takes ~1.5s to reach full white (75% of 2s),
+    // then hold white for 0.7s before transitioning
+    setTimeout(() => onStart(), 2200);
+  }, [onStart]);
+
   return (
-    <div className="landing">
-      <div className="landing__bg">
-        <img src={bgLandscape} alt="" />
+    <div className="landing landing--desk">
+      <DeskScene
+        onSceneReady={handleSceneReady}
+        onEnvelopeClicked={handleEnvelopeClicked}
+        onEnvelopeArrived={handleEnvelopeArrived}
+        onEnvelopeHover={handleEnvelopeHover}
+        onPostcardReady={handlePostcardReady}
+        postcardClicked={envelopeClicked}
+      />
+
+      {/* Loading cover — matches wood tone, hides black flash. Removed from DOM once hidden. */}
+      {!sceneReady && <div className="landing__loading" />}
+
+      {/* CTA — points to the floating postcard */}
+      <div
+        className={`postcard-back__cta ${
+          textReady && !envelopeHovered && !envelopeClicked ? "postcard-back__cta--visible" : ""
+        }`}
+      >
+        <span>Click the postcard to start</span>
+        <span className="postcard-back__cta-arrow">↑</span>
       </div>
 
-      <div className="card">
-        <div className="card__texture">
-          <img src={cardTexture} alt="" />
-        </div>
-
-        <span className="card__dot card__dot--tl" />
-        <span className="card__dot card__dot--tr" />
-        <span className="card__dot card__dot--bl" />
-        <span className="card__dot card__dot--br" />
-        <span className="card__border-inset" />
-
-        <div className="card__content">
-          <p className="tagline">
-            less arguing. more traveling.
-            <br />
-            we handle the rest.
-          </p>
-
-          <div className="landing__actions">
-            <button className="btn btn--primary" onClick={onStart}>
-              Start planning
-            </button>
-          </div>
-        </div>
-      </div>
+      {postcardDone && <div className="landing__flash" />}
     </div>
   );
 }
