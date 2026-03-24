@@ -57,6 +57,7 @@ function navSectionFor(step: Step): NavSection {
 
 export default function App() {
   const [step, setStep] = useState<Step>("landing");
+  const [fadingIn, setFadingIn] = useState(false);
   const [username, setUsername] = useState("");
   const [sessionCode, setSessionCode] = useState("");
   const [tripBasics, setTripBasics] = useState<TripBasics>({
@@ -177,12 +178,17 @@ export default function App() {
   /* ── Landing / Username / Room screens ─────────── */
 
   if (step === "landing") {
-    return <LandingPage onStart={() => setStep("username")} />;
+    return <LandingPage onStart={() => {
+      setFadingIn(true);
+      setStep("username");
+    }} />;
   }
 
   if (step === "username") {
     return (
-      <UsernameScreen
+      <>
+        {fadingIn && <div className="page-fade-in" onAnimationEnd={() => setFadingIn(false)} />}
+        <UsernameScreen
         onNewRoom={handleNewRoom}
         onSolo={handleSoloRoom}
         onJoinRoom={(name) => {
@@ -191,6 +197,7 @@ export default function App() {
         }}
         onBack={() => setStep("landing")}
       />
+      </>
     );
   }
 
